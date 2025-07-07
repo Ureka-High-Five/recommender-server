@@ -1,9 +1,7 @@
 from fastapi import APIRouter
 from app.services import recommend_service
 
-router = APIRouter(
-    prefix="/recommend",
-)
+router = APIRouter()
 
 @router.get("/contents")
 def recommend_contents(user_id : int):
