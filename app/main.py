@@ -1,7 +1,12 @@
 from fastapi import FastAPI
+from app.settings import settings
 
-app = FastAPI()
+app = FastAPI(
+    title="recommender server",
+)
 
 @app.get("/")
 def read_root():
-    return {"message": "Hello, FastAPI!"}
+    return {
+        "env": settings.DB_URL,
+    }
