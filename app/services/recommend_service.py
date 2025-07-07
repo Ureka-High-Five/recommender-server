@@ -6,10 +6,9 @@ from app.settings import settings
 def contents(user_id: str) -> list[str]:
   user_weights = user_repository.user_weight(user_id)
   user_vector = word2vec_util.calc_user_vector(user_weights)
-  # 모든 contents_vector와 user_vector 비교
-  return find_similar_contents(user_vector)
+  return find_similar_contents(user_vector) # 모든 contents_vector와 user_vector 비교
   
-def shorts(user_id : str) -> list[str]: # return shorts_id
+def shorts(user_id : str) -> list[str]:
   return 0
 
 def find_similar_contents(user_vector):

@@ -1,5 +1,3 @@
-# app/router/recommend.py
-
 from fastapi import APIRouter
 from app.services import recommend_service
 

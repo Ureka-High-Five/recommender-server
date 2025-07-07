@@ -1,4 +1,3 @@
-# db.py
 import pymysql
 from app.settings import settings
 

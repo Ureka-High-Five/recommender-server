@@ -2,7 +2,7 @@ import numpy as np
 from gensim.models import KeyedVectors
 
 class Word2VecModel:
-  _model = None  # 클래스 변수 (static처럼 동작)
+  _model = None
 
   @classmethod
   def load_model(cls, model_path: str):
