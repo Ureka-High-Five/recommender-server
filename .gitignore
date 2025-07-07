@@ -1,2 +1,13 @@
+# 가상환경
 venv/
-app/__pycache__
+
+# 파이썬 캐시 파일
+__pycache__/
+*.py[cod]
+
+# IDE 설정
+.vscode/
+.idea/
+
+# 기타
+*.log
