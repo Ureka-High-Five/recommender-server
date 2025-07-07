@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from app.settings import settings
 from contextlib import asynccontextmanager
-from app.services.word2vec_model import Word2VecModel
+from models.word2vec_model import Word2VecModel
 from app.router import recommend
 
 @asynccontextmanager

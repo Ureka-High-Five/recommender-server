@@ -1,7 +1,6 @@
-import numpy as np
 from app.repositories import user_repository
 from app.repositories import content_repository
-from app.services import word2vec_util
+from models import word2vec_util
 from app.settings import settings
 
 def contents(user_id: str) -> list[str]:
