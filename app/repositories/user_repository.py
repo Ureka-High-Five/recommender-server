@@ -15,7 +15,7 @@ def user_weight(user_id: int) -> dict[str, float]:
       rows = cursor.fetchall()
 
       if not rows:
-        raise UserNotFoundException(user_id)
+        raise WeightNotFoundError(user_id)
       
       return {row['name']: row['weight'] for row in rows}
 
