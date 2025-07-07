@@ -8,5 +8,5 @@ app = FastAPI(
 @app.get("/")
 def read_root():
     return {
-        "env": settings.DB_URL,
+        "env": settings.DB_NAME,
     }
