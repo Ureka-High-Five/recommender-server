@@ -11,3 +11,6 @@ __pycache__/
 
 # 기타
 *.log
+
+# w2v 모델
+GoogleNews-vectors-negative300.bin.gz
