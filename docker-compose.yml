@@ -7,4 +7,5 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - /home/ec2-user/models:/app/models
+      - /home/ec2-user/models:/app/app/models
+
