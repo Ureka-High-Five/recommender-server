@@ -1,11 +1,15 @@
-version: "3"
+version: "3.8"
 
 services:
-  fastapi:
+  api:
     build: .
-    container_name: recommender-server
+    container_name: recommender_server
+    restart: unless-stopped
+    env_file:
+      - .env
+      
+    volumes:
+      - ./app/models:/code/app/models
+
     ports:
       - "8000:8000"
-    volumes:
-      - /home/ec2-user/models:/app/app/models
-
