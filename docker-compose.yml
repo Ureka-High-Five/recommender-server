@@ -7,3 +7,5 @@ services:
     ports:
       - "8000:8000"
     restart: always
+    volumes:
+      - /home/ec2-user/models:/app/models
