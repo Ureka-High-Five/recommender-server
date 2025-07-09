@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from app.settings import settings
 from contextlib import asynccontextmanager
-from models.word2vec_model import Word2VecModel
-from app.router import recommend
+from app.models.word2vec_model import Word2VecModel
+from app.router import recommend, content
 
 @asynccontextmanager
 async def load_w2v(app: FastAPI):
@@ -19,6 +19,7 @@ app = FastAPI(
 )
 
 app.include_router(recommend.router)
+app.include_router(content.router)
 
 @app.get("/")
 def read_root():
