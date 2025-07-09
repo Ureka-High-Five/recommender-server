@@ -1,5 +1,5 @@
-# docker 기반 배포 용 ignore
-models/
 *.bin
 *.bin.gz
 *.pkl
+__pycache__/
+.env
