@@ -6,7 +6,7 @@ _genre_mapping = {
   "가족": "Family",
   "코미디": "Comedy",
   "애니메이션": "Animation",
-  "SF": "Science Fiction",
+  "SF": "SF",
   "다큐멘터리": "Documentary",
   "판타지": "Fantasy",
   "드라마": "Drama",

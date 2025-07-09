@@ -1,5 +1,5 @@
 import numpy as np
-from models.word2vec_model import Word2VecModel
+from app.models.word2vec_model import Word2VecModel
 
 def calc_user_vector(user_weights):
   weighted_vectors = []
@@ -18,3 +18,5 @@ def calc_user_vector(user_weights):
 
   return avg_vector
 
+def get_vector(keyword):
+  return Word2VecModel.get_vector(keyword)
