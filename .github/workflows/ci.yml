@@ -23,4 +23,4 @@ jobs:
         run: |
           pip install ruff pytest
           ruff check .
-          pytest -q
+          pytest -q || [ $? -eq 5 ]
