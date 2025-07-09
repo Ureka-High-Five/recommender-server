@@ -14,9 +14,3 @@ __pycache__/
 
 # w2v 모델
 GoogleNews-vectors-negative300.bin.gz
-
-# docker 기반 배포 용 ignore
-models/
-*.bin
-*.bin.gz
-*.pkl
