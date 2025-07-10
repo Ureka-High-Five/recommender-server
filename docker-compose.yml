@@ -2,12 +2,12 @@ version: "3.8"
 
 services:
   api:
-    build: .
+    image: ghkdwldus0807/lead-me-recommend:latest
     container_name: recommender_server
     restart: unless-stopped
     env_file:
       - .env
-      
+
     volumes:
       - ./app/models:/code/app/models
 
