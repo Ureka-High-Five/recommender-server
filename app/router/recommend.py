@@ -1,4 +1,3 @@
-from typing import List
 from fastapi import APIRouter, Query
 from pydantic import BaseModel
 from app.services import recommend_service

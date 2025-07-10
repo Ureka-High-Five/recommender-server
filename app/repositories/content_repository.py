@@ -1,4 +1,3 @@
-import json
 from app.db import get_connection
 from app.models import db_w2v_mapper, word2vec_util
 from collections import defaultdict
