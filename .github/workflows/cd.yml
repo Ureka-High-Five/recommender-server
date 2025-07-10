@@ -44,6 +44,11 @@ jobs:
             set -e
             cd ${{ secrets.EC2_PATH }}
 
+            echo "🔄 Git 최신 코드 pull"
+            git reset --hard
+            git clean -fd
+            git pull origin develop
+
             echo ".env 재생성"
             cat > .env <<'EOF'
             DB_HOST=${{ secrets.DB_HOST }}
@@ -58,6 +63,5 @@ jobs:
             docker image prune -af
             docker-compose pull
             docker-compose up -d --force-recreate
-            
 
             echo "✅  배포 완료"
