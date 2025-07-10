@@ -54,7 +54,7 @@ jobs:
             W2V_MODEL_PATH=${{ secrets.W2V_MODEL_PATH }}
             EOF
 
-            docker-compose down --volumes --remove-orphans
+            docker-compose down -v --remove-orphans
             docker-compose pull
             docker-compose up -d
             docker image prune -af
