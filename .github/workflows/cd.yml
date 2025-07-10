@@ -55,8 +55,9 @@ jobs:
             EOF
 
             docker-compose down -v --remove-orphans
-            docker-compose pull
-            docker-compose up -d
             docker image prune -af
+            docker-compose pull
+            docker-compose up -d --force-recreate
+            
 
             echo "✅  배포 완료"
