@@ -4,9 +4,6 @@ import ast
 
 def contents(user_vector, count) -> list[str]:
   return find_similar_contents(user_vector, count) # 모든 contents_vector와 user_vector 비교
-  
-def shorts(user_id : str) -> list[str]:
-  return 0
 
 def find_similar_contents(user_vector, count):
   all_contents = content_repository.get_all()

@@ -1,11 +1,13 @@
 from app.models import word2vec_util
 import numpy as np
+from app.models import db_w2v_mapper
 
 def init_user_vector(genre_map):
     weighted_vectors = []
     total_weight = 0
 
     for genre, weight in genre_map.items():
+        genre = db_w2v_mapper.translate_genre(genre)
         vector = word2vec_util.get_vector(genre)
         if vector is None:
             continue
