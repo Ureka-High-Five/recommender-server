@@ -1,27 +1,25 @@
-import json
 from app.db import get_connection
 from app.models import db_w2v_mapper, word2vec_util
 from collections import defaultdict
 import numpy as np
 
-def get_all_vector() -> dict[str, str]:
+def get_all() -> dict[str, str]:
   with get_connection() as conn:
     with conn.cursor() as cursor:
       sql = """
             SELECT id, title, thumbnail_url, embedding
-            FROM content
+            FROM contents
             """
       cursor.execute(sql)
       rows = cursor.fetchall()
       return { row['id']: {
                   'title': row['title'],
-                  'embedding': json.loads(row['embedding']),
+                  'embedding': row['embedding'],
                   'thumbnail_url': row['thumbnail_url'],
                 } for row in rows
               }
     
 def init_vector():
-
   with get_connection() as conn:
     with conn.cursor() as cursor:
       sql = """
