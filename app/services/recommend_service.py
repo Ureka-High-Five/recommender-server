@@ -1,7 +1,6 @@
 from app.repositories import user_repository
 from app.repositories import content_repository
 from app.models import word2vec_util
-from app.settings import settings
 import ast
 
 def contents(user_vector, count) -> list[str]:
