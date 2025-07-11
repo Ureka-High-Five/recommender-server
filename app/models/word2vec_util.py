@@ -22,6 +22,9 @@ def get_vector(keyword):
   return Word2VecModel.get_vector(keyword)
 
 def calc_similarity(vec1, vec2):
+  print("calc_similarity")
+  print(f"vec1 = {vec1[:3]}")
+  print(f"vec2 = {vec2[:3]}")
   vec1 = np.array(vec1)
   vec2 = np.array(vec2)
 
