@@ -14,7 +14,6 @@ def recommend_contents(
   count: int = Query(...)      # ✅ query parameter
 ):
   vector = request.vector
-  print(vector)
   return recommend_service.contents(vector, count)
 
 @router.get("/shorts")
