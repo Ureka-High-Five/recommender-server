@@ -4,7 +4,7 @@ from app.models import word2vec_util
 def calc_by_genre(genres):
   vecs = []
   for name in genres:
-    vec = word2vec_util.get_vector(name)  # ex) List[float] or np.ndarray
+    vec = word2vec_util.get_vector(name)
     if vec is None:
       continue
     vecs.append(np.asarray(vec, dtype=np.float32))

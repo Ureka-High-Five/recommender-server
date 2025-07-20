@@ -3,7 +3,7 @@ from app.models import word2vec_util
 import ast
 
 def recommend_contents_by_user(user_vector, count) -> list[str]:
-  return find_similar_contents(user_vector, count) # 모든 contents_vector와 user_vector 비교
+  return find_similar_contents(user_vector, count)
 
 def find_similar_contents(user_vector, count):
   all_contents = content_repository.get_all()
