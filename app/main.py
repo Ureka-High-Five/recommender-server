@@ -9,15 +9,6 @@ import asyncio
 
 @asynccontextmanager
 async def load_w2v(app: FastAPI):
-    # 앱 시작 시
-    Word2VecModel.load_model(settings.W2V_MODEL_PATH)
-    print("✅ Word2Vec 모델 로드 완료")
-    yield
-    # 앱 종료 시
-    print("🛑 앱 종료됨")
-
-@asynccontextmanager
-async def load_w2v(app: FastAPI):
     Word2VecModel.load_model(settings.W2V_MODEL_PATH)
     print("✅ Word2Vec 모델 로드 완료")
 
