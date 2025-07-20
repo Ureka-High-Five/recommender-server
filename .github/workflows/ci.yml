@@ -19,8 +19,22 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: set up .env.local
+        run: |
+          echo "DB_HOST=localhost" >> .env.local
+          echo "DB_PORT=5432" >> .env.local
+          echo "DB_USERNAME=testuser" >> .env.local
+          echo "DB_PASSWORD=testpass" >> .env.local
+          echo "DB_NAME=testdb" >> .env.local
+          echo "W2V_MODEL_PATH=./app/assets/word2vec.model" >> .env.local
+          echo "MONGO_URL=mongodb://localhost:27017" >> .env.local
+          echo "RECOMMEND_CONTENTS_COUNT=10" >> .env.local
+          echo "RABBITMQ_URL=localhost" >> .env.local
+          echo "RABBITMQ_PORT=5672" >> .env.local
+
       - name: Lint (ruff) & Unit-test (pytest)
         run: |
           pip install ruff pytest
           ruff check .
           pytest -q || [ $? -eq 5 ]
+        
