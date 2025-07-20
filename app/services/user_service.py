@@ -5,11 +5,6 @@ import numpy as np
 from app.models import db_w2v_mapper
 from app.repositories.user_weight_repository import UserWeightRepository
 
-mongo_client = MongoClient("mongodb://localhost:27017/")
-
-def get_prefer_info_repository():
-    return UserWeightRepository(mongo_client)
-
 def init_user_vector(genre_map):
     weighted_vectors = []
     total_weight = 0

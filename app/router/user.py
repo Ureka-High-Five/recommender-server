@@ -4,13 +4,14 @@ from pymongo import MongoClient
 from app.dto.user_dto import UserActionRequestDto
 from app.repositories.user_weight_repository import UserWeightRepository
 from app.services import user_service
+from app.settings import settings
 
 router = APIRouter()
 
 class FastApiOnboardingResponseDto(BaseModel):
     userVector: str
 
-mongo_client = MongoClient("mongodb://root:rootpass@localhost:27017/highfive?authSource=admin")
+mongo_client = MongoClient(settings.MONGO_URL)
 
 # Dependency
 def get_prefer_info_repository():

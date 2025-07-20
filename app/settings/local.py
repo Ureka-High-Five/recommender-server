@@ -9,7 +9,7 @@ class LocalSettings(BaseSettings):
     DB_PASSWORD: str
     DB_NAME: str
     W2V_MODEL_PATH: str
-    RECOMMEND_CONTENTS_COUNT: int
+    MONGO_URL: str
 
     class Config:
         env_file = ".env.local"
