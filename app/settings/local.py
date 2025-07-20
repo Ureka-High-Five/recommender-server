@@ -11,6 +11,8 @@ class LocalSettings(BaseSettings):
     RECOMMEND_CONTENTS_COUNT: int
     RABBITMQ_URL: str
     RABBITMQ_PORT: int
+    RABBITMQ_DEFAULT_USER: str
+    RABBITMQ_DEFAULT_PASS: str
 
     model_config = SettingsConfigDict(
         env_file=str(Path(__file__).resolve().parent.parent.parent / ".env.local"),
