@@ -1,4 +1,3 @@
-from fastapi import Depends
 from pymongo import MongoClient
 from app.dto.user_dto import UserActionRequestDto
 from app.models import word2vec_util
@@ -32,8 +31,8 @@ def init_user_vector(genre_map):
 def process_user_action(req : UserActionRequestDto, 
                         repo: UserWeightRepository):
     user_id = req.user_id
-    action_type = req.action_type
-    value = req.value
+    # action_type = req.action_type
+    # value = req.value
 
     weights = repo.find_by_user_id(user_id)
     print(weights)
