@@ -18,7 +18,7 @@ async def load_w2v(app: FastAPI):
 
 @asynccontextmanager
 async def load_w2v(app: FastAPI):
-    # Word2VecModel.load_model(settings.W2V_MODEL_PATH)
+    Word2VecModel.load_model(settings.W2V_MODEL_PATH)
     print("✅ Word2Vec 모델 로드 완료")
 
     # RabbitMQ consumer 백그라운드 실행
@@ -37,7 +37,7 @@ app = FastAPI(
 app.include_router(recommend.router)
 app.include_router(content.router)
 app.include_router(user.router)
-# app.include_router(embedding.router)
+app.include_router(embedding.router)
 
 @app.get("/")
 def read_root():
