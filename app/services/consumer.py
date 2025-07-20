@@ -5,7 +5,7 @@ QUEUE_NAME = "recommendation.weight.update"
 
 async def start_consumer():
     amqp_url = (
-        f"amqp://{settings.RABBITMQ_USERNAME}:{settings.RABBITMQ_PASSWORD}"
+        f"amqp://{settings.RABBITMQ_DEFAULT_USER}:{settings.RABBITMQ_DEFAULT_PASS}"
         f"@{settings.RABBITMQ_URL}:{settings.RABBITMQ_PORT}/"
     )
     connection = await aio_pika.connect_robust(amqp_url)

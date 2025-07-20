@@ -60,6 +60,8 @@ jobs:
             RABBITMQ_PORT=${{ secrets.RABBITMQ_PORT}}
             RABBITMQ_UI_PORT=${{ secrets.RABBITMQ_UI_PORT}}
             MONGO_URL=${{ secrets.MONGO_URL }}
+            RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER}}
+            RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS}}
             
             RAG
             W2V_MODEL_PATH=${{ secrets.W2V_MODEL_PATH }}
