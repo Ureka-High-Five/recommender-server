@@ -10,12 +10,8 @@ class RecommendRequest(BaseModel):
 
 @router.post("/contents")
 def recommend_contents(
-  request: RecommendRequest,     # ✅ body
-  count: int = Query(...)      # ✅ query parameter
+  request: RecommendRequest,
+  count: int = Query(...)
 ):
-  vector = request.vector
-  return recommend_service.contents(vector, count)
-
-@router.get("/shorts")
-def recommend_shorts(user_id : int):
-  return recommend_service.shorts(user_id)
+  user_vector = request.vector
+  return recommend_service.recommend_contents_by_user(user_vector, count)

@@ -12,9 +12,9 @@ def calc_user_vector(user_weights):
       continue
 
   if not weighted_vectors:
-    return []  # 벡터가 하나도 없을 경우
+    return []
 
-  avg_vector = np.mean(weighted_vectors, axis=0)  # 평균 벡터 계산
+  avg_vector = np.mean(weighted_vectors, axis=0)
 
   return avg_vector
 
@@ -30,6 +30,6 @@ def calc_similarity(vec1, vec2):
   norm2 = np.linalg.norm(vec2)
 
   if norm1 == 0 or norm2 == 0:
-      return 0.0  # 유사도를 정의할 수 없음
+      return 0.0
 
   return dot_product / (norm1 * norm2)

@@ -8,6 +8,7 @@ class LocalSettings(BaseSettings):
     DB_PASSWORD: str
     DB_NAME: str
     W2V_MODEL_PATH: str
+    MONGO_URL: str
     RECOMMEND_CONTENTS_COUNT: int
     RABBITMQ_URL: str
     RABBITMQ_PORT: int
