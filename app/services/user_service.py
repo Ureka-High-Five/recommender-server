@@ -1,4 +1,3 @@
-from pymongo import MongoClient
 from app.dto.user_dto import UserActionRequestDto
 from app.models import word2vec_util
 import numpy as np
