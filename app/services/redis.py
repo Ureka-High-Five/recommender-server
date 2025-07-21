@@ -14,6 +14,6 @@ async def close_redis():
         await redis.close()
         print("🧹 Redis 연결 종료")
 
-async def save_user_vector(user_id: str, value: str):
+async def save_user_vector(user_id: int, value: str):
     await redis.set(user_id, value)
     print(f"✅ 🔐 Redis 저장 완료: {user_id} → {value}")
