@@ -27,7 +27,7 @@ async def resize_weight(action_log_repo: ActionLogRepository, user_weight_repo: 
          genre = db_w2v_mapper.translate_genre(genre)
          genre_dict[genre] += weight
     for genre_name, weight in genre_dict.items():
-        await user_weight_repo.update_weight(user_id, genre_name, weight)
+        await user_weight_repo.reset_weight(user_id, genre_name, weight)
   return
 
 def calc_resized_weight(timestamp : int, weight : float):
