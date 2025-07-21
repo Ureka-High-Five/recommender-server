@@ -13,7 +13,6 @@ class LocalSettings(BaseSettings):
     RABBITMQ_DEFAULT_USER: str
     RABBITMQ_DEFAULT_PASS: str
     MONGO_URL: str
-    POSTGRESQL_URL: str
     DEV_REDIS_HOST: str
     DEV_REDIS_PORT: int
 
