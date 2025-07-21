@@ -12,6 +12,8 @@ def convert_to_weight(type : ActionType, value : float) -> float :
       return 0.2
     if 70 <= value:
       return 0.3
+    else:
+      return 0
   if type == ActionType.RATING:
     if value <= 2:
       return 0
