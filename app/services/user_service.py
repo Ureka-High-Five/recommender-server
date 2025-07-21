@@ -22,13 +22,13 @@ def init_user_vector(genre_map):
     user_vector = sum(weighted_vectors) / total_weight
     return str(user_vector.tolist())
 
-def process_user_action(req : UserActionRequestDto, 
+async def process_user_action(req : UserActionRequestDto, 
                         repo: UserWeightRepository):
     user_id = req.user_id
     # action_type = req.action_type
     # value = req.value
 
-    weights = repo.find_by_user_id(user_id)
+    weights = await repo.find_by_user_id(user_id)
     print(weights)
 
     # todo 가중중치 업데이트

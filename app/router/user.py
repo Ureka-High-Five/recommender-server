@@ -23,7 +23,7 @@ def onboarding(genre_map: dict[str, int]):
     return FastApiOnboardingResponseDto(userVector=user_vector_str)
 
 @router.patch("/user/action")
-def user_action(req : UserActionRequestDto,
+async def user_action(req : UserActionRequestDto,
                 repo: UserWeightRepository = Depends(get_prefer_info_repository)):
     user_service.process_user_action(req, repo)
 
