@@ -34,6 +34,7 @@ async def load_w2v(app: FastAPI):
 
     # PostgreSQL 연결
     pg_pool = await asyncpg.create_pool(dsn=settings.POSTGRESQL_URL)
+    app.state.pg_pool = pg_pool
     print("✅ PostgreSQL 연결 완료")
 
     # resize_weight를 위한 스케줄링 함수 정의
@@ -53,7 +54,7 @@ async def load_w2v(app: FastAPI):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 
-    load_word2vec()
+    load_w2v()
 
     await init_redis()
 
@@ -61,7 +62,7 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    await pg_pool.close()
+    await app.state.pg_pool.close().close()
     print("🛑 앱 종료 중...")
     rabbitmq_task.cancel()
     await close_redis()

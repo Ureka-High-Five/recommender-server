@@ -6,7 +6,6 @@ from app.services import weight_strategy
 from app.enum.action_type import ActionType
 from app.models import db_w2v_mapper
 from app.util.weight_aging import exponential_decay_weight
-from app.repositories import postgresql_repository
 from app.repositories.action_log_repository import ActionLogRepository
 from app.repositories.user_weight_repository import UserWeightRepository
 
