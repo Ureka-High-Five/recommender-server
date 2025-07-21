@@ -62,6 +62,8 @@ jobs:
             MONGO_URL=${{ secrets.MONGO_URL }}
             RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER}}
             RABBITMQ_DEFAULT_PASS=${{ secrets.RABBITMQ_DEFAULT_PASS}}
+            DEV_REDIS_HOST=${{secrets.DEV_REDIS_HOST}}
+            DEV_REDIS_PORT=${{secrets.DEV_REDIS_PORT}}
             
             RAG
             W2V_MODEL_PATH=${{ secrets.W2V_MODEL_PATH }}
