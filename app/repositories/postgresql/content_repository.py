@@ -1,7 +1,7 @@
 from typing import List
 import asyncpg
 
-async def get_genres_by_content_id(content_id: int) -> List[str]:
+async def get_genre_id_by_content_id(content_id: int) -> List[str]:
     conn = await asyncpg.connect(
         user='your_user',
         password='your_password',

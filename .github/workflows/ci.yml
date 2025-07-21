@@ -30,6 +30,7 @@ jobs:
           echo "MONGO_URL=mongodb://localhost:27017" >> .env.local
           echo "RABBITMQ_URL=localhost" >> .env.local
           echo "RABBITMQ_PORT=5672" >> .env.local
+          echo "POSTGRESQL_URL=postgresql://localhost:5432" >> .env.local
 
       - name: Lint (ruff) & Unit-test (pytest)
         run: |
