@@ -10,6 +10,8 @@ class LocalSettings(BaseSettings):
     W2V_MODEL_PATH: str
     RABBITMQ_URL: str
     RABBITMQ_PORT: int
+    RABBITMQ_DEFAULT_USER: str
+    RABBITMQ_DEFAULT_PASS: str
     MONGO_URL: str
 
     model_config = SettingsConfigDict(
