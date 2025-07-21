@@ -1,15 +1,11 @@
 from typing import List, Dict
-from pymongo import MongoClient, UpdateOne
-
+from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
+from pymongo import UpdateOne
 
 class UserWeightRepository:
-    def __init__(self, mongo_client: MongoClient):
+    def __init__(self, mongo_client: AsyncIOMotorClient):
         self.db = mongo_client["highfive"]
-        self.collection = self.db["user_weight"]
-
-    def find_by_user_id(self, user_id: int) -> List[Dict]:
-        results = self.collection.find({"userId": user_id})
-        return list(results)
+        self.collection: AsyncIOMotorCollection = self.db["user_weight"]
 
     def update_user_weights(
         self, user_id: int, meta_info_ids: list[int], weight: float
@@ -25,3 +21,13 @@ class UserWeightRepository:
             )
         if operations:
             self.collection.bulk_write(operations)
+
+    async def find_by_user_id(self, user_id: int) -> List[Dict]:
+        cursor = self.collection.find({"userId": user_id})
+        results = await cursor.to_list(length=None)
+        return results
+    
+    async def reset_weight(self, user_id: int, genre: str, weight: float):
+        filter = {"userId": user_id, "metaInfoName": genre}
+        update = {"$set": {"weight": weight}}
+        await self.collection.update_one(filter, update, upsert=True)
