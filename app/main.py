@@ -1,8 +1,11 @@
+from functools import partial
+import asyncpg
 from fastapi import FastAPI
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from app.models.word2vec_model import Word2VecModel
 from app.repositories.action_log_repository import ActionLogRepository
+from app.repositories.postgresql_repository import get_genres_by_content_id
 from app.repositories.user_weight_repository import UserWeightRepository
 from app.services.redis import init_redis, close_redis
 from app.services.scheduler_service import resize_weight
@@ -20,15 +23,29 @@ async def start_rabbitmq_consumer():
     return asyncio.create_task(start_consumer())
 
 @asynccontextmanager
-def load_word2vec():
-    mongo_client = AsyncIOMotorClient(settings.MONGO_URL)
-    action_log_repo = ActionLogRepository(mongo_client)
-    user_weight_repo = UserWeightRepository(mongo_client)
+async def load_w2v(app: FastAPI):
     Word2VecModel.load_model(settings.W2V_MODEL_PATH)
     print("✅ Word2Vec 모델 로드 완료")
 
+    # MongoDB 연결
+    mongo_client = AsyncIOMotorClient(settings.MONGO_URL)
+    action_log_repo = ActionLogRepository(mongo_client)
+    user_weight_repo = UserWeightRepository(mongo_client)
+
+    # PostgreSQL 연결
+    pg_pool = await asyncpg.create_pool(dsn=settings.POSTGRESQL_URL)
+    app.state.pg_pool = pg_pool
+    print("✅ PostgreSQL 연결 완료")
+
+    # resize_weight를 위한 스케줄링 함수 정의
     def schedule_resize_weight():
-        asyncio.create_task(resize_weight(action_log_repo, user_weight_repo))
+        asyncio.create_task(
+            resize_weight(
+                action_log_repo,
+                user_weight_repo,
+                partial(get_genres_by_content_id, pg_pool)
+            )
+        )
 
     scheduler.add_job(schedule_resize_weight, "cron", hour=3, minute=0)
     scheduler.start()
@@ -37,7 +54,7 @@ def load_word2vec():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 
-    load_word2vec()
+    load_w2v()
 
     await init_redis()
 
@@ -45,6 +62,7 @@ async def lifespan(app: FastAPI):
 
     yield
 
+    await app.state.pg_pool.close().close()
     print("🛑 앱 종료 중...")
     rabbitmq_task.cancel()
     await close_redis()
