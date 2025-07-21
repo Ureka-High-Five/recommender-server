@@ -23,7 +23,7 @@ async def start_rabbitmq_consumer():
     return asyncio.create_task(start_consumer())
 
 async def load_w2v(app: FastAPI):
-    # Word2VecModel.load_model(settings.W2V_MODEL_PATH)
+    Word2VecModel.load_model(settings.W2V_MODEL_PATH)
     print("✅ Word2Vec 모델 로드 완료")
 
     # MongoDB 연결
