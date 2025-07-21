@@ -1,23 +1,28 @@
+from sched import scheduler
+
 from fastapi import FastAPI
+from motor.motor_asyncio import AsyncIOMotorClient
 
 from app.models.word2vec_model import Word2VecModel
+from app.repositories.action_log_repository import ActionLogRepository
+from app.repositories.user_weight_repository import UserWeightRepository
+from app.services.redis import init_redis, close_redis
+from app.services.scheduler_service import resize_weight
 from app.settings import settings
 from contextlib import asynccontextmanager
 from app.router import recommend, content, user, embedding
 from app.services.consumer import start_consumer
 import asyncio
 
-@asynccontextmanager
-async def load_w2v(app: FastAPI):
-    mongo_client = AsyncIOMotorClient(settings.MONGO_URL)
-    action_log_repo = ActionLogRepository(mongo_client)
-    user_weight_repo = UserWeightRepository(mongo_client)
-
 async def start_rabbitmq_consumer():
     print("🚀 RabbitMQ Consumer 시작")
     return asyncio.create_task(start_consumer())
 
+@asynccontextmanager
 def load_word2vec():
+    mongo_client = AsyncIOMotorClient(settings.MONGO_URL)
+    action_log_repo = ActionLogRepository(mongo_client)
+    user_weight_repo = UserWeightRepository(mongo_client)
     Word2VecModel.load_model(settings.W2V_MODEL_PATH)
     print("✅ Word2Vec 모델 로드 완료")
 

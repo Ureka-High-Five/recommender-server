@@ -1,7 +1,7 @@
 import aioredis
 from app.settings import settings
 
-redis = None
+redis = None  # 전역 Redis 클라이언트
 
 async def init_redis():
     global redis
@@ -10,10 +10,12 @@ async def init_redis():
     print(f"✅ Redis 연결 성공: {redis_url}")
 
 async def close_redis():
+    global redis
     if redis:
         await redis.close()
+        redis = None
         print("🧹 Redis 연결 종료")
 
 async def save_user_vector(user_id: int, value: str):
-    await redis.set(user_id, value)
+    await redis.set(str(user_id), value)
     print(f"✅ 🔐 Redis 저장 완료: {user_id} → {value}")
