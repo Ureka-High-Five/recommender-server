@@ -4,6 +4,7 @@ import numpy as np
 from app.models import db_w2v_mapper
 from app.repositories.user_weight_repository import UserWeightRepository
 
+
 def init_user_vector(genre_map):
     weighted_vectors = []
     total_weight = 0
@@ -32,3 +33,16 @@ async def process_user_action(req : UserActionRequestDto,
     print(weights)
 
     # todo 가중중치 업데이트
+
+
+def update_user_weight(message: dict, repo: UserWeightRepository):
+    user_id = message.get("userId")
+    meta_info_ids = message.get("metaInfo_Ids", [])
+    weight = message.get("weight", 0.0)
+
+    if not user_id or not meta_info_ids:
+        print("Invalid message:", message)
+        return
+
+    repo.bulk_update_user_weights(user_id, meta_info_ids, weight)
+    print(f" 유저의 가중치 업데이트 성공 : {user_id}")
