@@ -10,3 +10,7 @@ class UserWeightRepository:
         cursor = self.collection.find({"userId": user_id})
         results = await cursor.to_list(length=None)
         return results
+    async def update_weight(self, user_id: int, genre: str, weight: float):
+        filter = {"userId": user_id, "metaInfoName": genre}
+        update = {"$set": {"weight": weight}}
+        await self.collection.update_one(filter, update, upsert=True)
