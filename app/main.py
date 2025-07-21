@@ -32,7 +32,13 @@ async def load_w2v(app: FastAPI):
     user_weight_repo = UserWeightRepository(mongo_client)
 
     # PostgreSQL 연결
-    pg_pool = await asyncpg.create_pool(dsn=settings.POSTGRESQL_URL)
+    pg_pool = await asyncpg.create_pool(
+        host=settings.DB_HOST,
+        port=settings.DB_PORT,
+        database=settings.DB_NAME,
+        user=settings.DB_USERNAME,
+        password=settings.DB_PASSWORD
+    )
     app.state.pg_pool = pg_pool
     print("✅ PostgreSQL 연결 완료")
 
