@@ -11,7 +11,6 @@ class LocalSettings(BaseSettings):
     RABBITMQ_URL: str
     RABBITMQ_PORT: int
     MONGO_URL: str
-    POSTGRESQL_URL: str
 
     model_config = SettingsConfigDict(
         env_file=str(Path(__file__).resolve().parent.parent.parent / ".env.local"),
