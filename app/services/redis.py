@@ -1,7 +1,6 @@
 from redis.asyncio import Redis
 from app.settings import settings
 
-
 redis = None
 
 async def init_redis():
