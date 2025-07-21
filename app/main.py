@@ -13,6 +13,10 @@ from contextlib import asynccontextmanager
 from app.router import recommend, content, user, embedding
 from app.services.consumer import start_consumer
 import asyncio
+from app.services.scheduler_service import resize_weight
+from apscheduler.schedulers.background import BackgroundScheduler
+
+scheduler = BackgroundScheduler()
 
 async def start_rabbitmq_consumer():
     print("🚀 RabbitMQ Consumer 시작")
