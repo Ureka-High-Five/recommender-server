@@ -11,7 +11,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 scheduler = BackgroundScheduler()
 
-def resize_user_weight():
+async def resize_user_weight():
     scheduler_service.resize_weight()
 
 @asynccontextmanager
