@@ -16,5 +16,4 @@ def find_similar_contents(user_vector, count):
 
   # similarities.sort(key=lambda x: x["score"], reverse=True)
   # return similarities[:count]
-  data = list(range(1000))
   return [{"id": i} for i in range(420, 420 + count)]
