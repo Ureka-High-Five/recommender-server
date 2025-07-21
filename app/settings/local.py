@@ -13,6 +13,8 @@ class LocalSettings(BaseSettings):
     RABBITMQ_DEFAULT_USER: str
     RABBITMQ_DEFAULT_PASS: str
     MONGO_URL: str
+    DEV_REDIS_HOST: str
+    DEV_REDIS_PORT: int
 
     model_config = SettingsConfigDict(
         env_file=str(Path(__file__).resolve().parent.parent.parent / ".env.local"),
