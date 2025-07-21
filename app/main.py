@@ -1,21 +1,26 @@
 from functools import partial
 import asyncpg
 from fastapi import FastAPI
+from motor.motor_asyncio import AsyncIOMotorClient
 
 from app.models.word2vec_model import Word2VecModel
 from app.repositories.action_log_repository import ActionLogRepository
 from app.repositories.postgresql_repository import get_genres_by_content_id
 from app.repositories.user_weight_repository import UserWeightRepository
+from app.services.redis import init_redis, close_redis
+from app.services.scheduler_service import resize_weight
 from app.settings import settings
 from contextlib import asynccontextmanager
 from app.router import recommend, content, user, embedding
 from app.services.consumer import start_consumer
 import asyncio
-from app.services.scheduler_service import resize_weight
 from apscheduler.schedulers.background import BackgroundScheduler
-from motor.motor_asyncio import AsyncIOMotorClient
 
 scheduler = BackgroundScheduler()
+
+async def start_rabbitmq_consumer():
+    print("🚀 RabbitMQ Consumer 시작")
+    return asyncio.create_task(start_consumer())
 
 @asynccontextmanager
 async def load_w2v(app: FastAPI):
@@ -41,24 +46,30 @@ async def load_w2v(app: FastAPI):
             )
         )
 
-    # Kafka consumer 실행
-    consumer_task = asyncio.create_task(start_consumer())
-
-    # 스케줄러 설정
     scheduler.add_job(schedule_resize_weight, "cron", hour=3, minute=0)
     scheduler.start()
     print("✅ APScheduler 설정 완료")
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+
+    load_word2vec()
+
+    await init_redis()
+
+    rabbitmq_task = await start_rabbitmq_consumer()
+
     yield
 
-    # 종료 시 cleanup
-    consumer_task.cancel()
     await pg_pool.close()
-    print("🛑 앱 종료됨 / PostgreSQL 커넥션 종료됨")
+    print("🛑 앱 종료 중...")
+    rabbitmq_task.cancel()
+    await close_redis()
+    print("🧹 자원 정리 완료")
 
 app = FastAPI(
     title="recommender server",
-    lifespan=load_w2v,
+    lifespan=lifespan,
 )
 
 app.include_router(recommend.router)
@@ -68,9 +79,7 @@ app.include_router(embedding.router)
 
 @app.get("/")
 def read_root():
-    return {
-        "env": settings.DB_NAME,
-    }
+    return {"env": settings.DB_NAME}
 
 if __name__ == "__main__":
     import uvicorn

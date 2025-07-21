@@ -31,6 +31,8 @@ jobs:
           echo "RABBITMQ_URL=localhost" >> .env.local
           echo "RABBITMQ_PORT=5672" >> .env.local
           echo "POSTGRESQL_URL=postgresql://localhost:5432" >> .env.local
+          echo "DEV_REDIS_HOST=localhost" >> .env.local
+          echo "DEV_REDIS_PORT=6379" >> .env.local
 
       - name: Lint (ruff) & Unit-test (pytest)
         run: |
