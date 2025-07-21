@@ -8,10 +8,10 @@ class LocalSettings(BaseSettings):
     DB_PASSWORD: str
     DB_NAME: str
     W2V_MODEL_PATH: str
-    MONGO_URL: str
-    RECOMMEND_CONTENTS_COUNT: int
     RABBITMQ_URL: str
     RABBITMQ_PORT: int
+    MONGO_URL: str
+    POSTGRESQL_URL: str
 
     model_config = SettingsConfigDict(
         env_file=str(Path(__file__).resolve().parent.parent.parent / ".env.local"),
