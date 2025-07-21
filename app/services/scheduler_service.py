@@ -11,7 +11,7 @@ from app.repositories.action_log_repository import ActionLogRepository
 from app.repositories.user_weight_repository import UserWeightRepository
 
 async def resize_weight(action_log_repo: ActionLogRepository, user_weight_repo: UserWeightRepository):
-  all_logs = await action_log_repo.find_all_order_by_user_id();
+  all_logs = await action_log_repo.find_all_order_by_user_id()
   grouped_logs = group_logs_by_user_id(all_logs)
 
   for user_id, logs in grouped_logs.items():

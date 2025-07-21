@@ -1,7 +1,5 @@
 from typing import List, Dict
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
-from pymongo import MongoClient, UpdateOne
-
 
 class UserWeightRepository:
     def __init__(self, mongo_client: AsyncIOMotorClient):
