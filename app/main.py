@@ -6,6 +6,13 @@ from contextlib import asynccontextmanager
 from app.router import recommend, content, user, embedding
 from app.services.consumer import start_consumer
 import asyncio
+from app.services import scheduler_service
+from apscheduler.schedulers.background import BackgroundScheduler
+
+scheduler = BackgroundScheduler()
+
+def resize_user_weight():
+    scheduler_service.resize_weight()
 
 @asynccontextmanager
 async def load_w2v(app: FastAPI):
@@ -14,6 +21,9 @@ async def load_w2v(app: FastAPI):
 
     # RabbitMQ consumer 백그라운드 실행
     consumer_task = asyncio.create_task(start_consumer())
+    scheduler.add_job(resize_user_weight, "cron", hour=3, minute=0)  # 매일 새벽 3시
+    scheduler.start()
+    print("✅ APScheduler 설정 완료")
 
     yield
 
