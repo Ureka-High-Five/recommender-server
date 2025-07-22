@@ -11,7 +11,7 @@ from app.services.redis import init_redis, close_redis
 from app.services.scheduler_service import resize_weight
 from app.settings import settings
 from contextlib import asynccontextmanager
-from app.router import recommend, content, user, embedding
+from app.router import recommend, content, scheduler, user, embedding
 from app.services.consumer import start_consumer
 import asyncio
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -30,6 +30,7 @@ async def load_w2v(app: FastAPI):
 
     # MongoDB 연결
     mongo_client = AsyncIOMotorClient(settings.MONGO_URL)
+    app.state.mongo_client = mongo_client
     action_log_repo = ActionLogRepository(mongo_client)
     user_weight_repo = UserWeightRepository(mongo_client)
 
@@ -86,6 +87,7 @@ app.include_router(recommend.router)
 app.include_router(content.router)
 app.include_router(user.router)
 app.include_router(embedding.router)
+app.include_router(scheduler.router)
 
 
 @app.get("/")
