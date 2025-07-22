@@ -1,6 +1,6 @@
 import json
 from app.repositories.user_weight_repository import UserWeightRepository
-from app.services.user_service import update_user_weight
+from app.services.user_service import process_user_action, update_user_weight
 from app.settings.local import settings
 import aio_pika
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -27,7 +27,13 @@ async def start_consumer():
                 print(f"📥 Received: {body}")
                 try:
                     data = json.loads(body)
-                    update_user_weight(
+                    await process_user_action(
+                        data,
+                        UserWeightRepository(
+                            mongo_client=AsyncIOMotorClient(settings.MONGO_URL)
+                        ),
+                    ),
+                    await update_user_weight(
                         data,
                         repo=UserWeightRepository(
                             mongo_client=AsyncIOMotorClient(settings.MONGO_URL)
