@@ -31,7 +31,6 @@ async def resize_weight(
 
             content_id = log['contentId']
             genres = await get_genres_by_content_id_func(content_id)
-
             for genre in genres:
                 translated = db_w2v_mapper.translate_genre(genre)
                 if translated:
@@ -40,6 +39,7 @@ async def resize_weight(
         for genre_name, weight in genre_dict.items():
             await user_weight_repo.reset_weight(user_id, genre_name, weight)
 
+    print("✅ 가중치 재계산 완료")
     return
 
 def calc_resized_weight(timestamp : int, weight : float):
