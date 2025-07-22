@@ -1,8 +1,10 @@
 from app.dto.user_dto import UserActionRequestDto
+from app.enum.action_type import ActionType
 from app.models import word2vec_util
 import numpy as np
 from app.models import db_w2v_mapper
 from app.repositories.user_weight_repository import UserWeightRepository
+from app.services.weight_strategy import convert_to_weight
 
 
 def init_user_vector(genre_map):
@@ -23,8 +25,8 @@ def init_user_vector(genre_map):
     user_vector = sum(weighted_vectors) / total_weight
     return str(user_vector.tolist())
 
-async def process_user_action(req : UserActionRequestDto, 
-                        repo: UserWeightRepository):
+
+async def process_user_action(req: UserActionRequestDto, repo: UserWeightRepository):
     user_id = req.user_id
     # action_type = req.action_type
     # value = req.value
@@ -37,12 +39,17 @@ async def process_user_action(req : UserActionRequestDto,
 
 def update_user_weight(message: dict, repo: UserWeightRepository):
     user_id = message.get("userId")
-    meta_info_ids = message.get("metaInfo_Ids", [])
-    weight = message.get("weight", 0.0)
+    meta_info_ids = message.get("metaInfoIds", [])
+    meta_info_names = message.get("metaInfoNames", [])
+    action_type = ActionType[message.get("actionType")]
+    value = message.get("value", 0.0)
+
+    weight = convert_to_weight(action_type, value)
 
     if not user_id or not meta_info_ids:
         print("Invalid message:", message)
         return
 
-    repo.bulk_update_user_weights(user_id, meta_info_ids, weight)
+    meta_info = list(zip(meta_info_ids, meta_info_names))
+    repo.update_user_weights(user_id, meta_info, weight)
     print(f" 유저의 가중치 업데이트 성공 : {user_id}")
