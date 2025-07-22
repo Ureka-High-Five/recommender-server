@@ -1,5 +1,10 @@
+import json
+from app.repositories.user_weight_repository import UserWeightRepository
+from app.services.user_service import process_user_action, update_user_weight
 from app.settings.local import settings
 import aio_pika
+from motor.motor_asyncio import AsyncIOMotorClient
+
 
 QUEUE_NAME = "recommendation.weight.update"
 
@@ -20,11 +25,19 @@ async def start_consumer():
             async with message.process():
                 body = message.body.decode()
                 print(f"📥 Received: {body}")
-                # try:
-                #     data = json.loads(body)
-                #     update_user_weight(
-                #         data,
-                #         repo=UserWeightRepository(mongo_client=settings.MONGO_CLIENT),
-                #     )
-                # except Exception as e:
-                #     print(f"Rabbit MQ로부터의 메세지를 처리하는데 실패하였습니다.: {e}")
+                try:
+                    data = json.loads(body)
+                    await process_user_action(
+                        data,
+                        UserWeightRepository(
+                            mongo_client=AsyncIOMotorClient(settings.MONGO_URL)
+                        ),
+                    ),
+                    await update_user_weight(
+                        data,
+                        repo=UserWeightRepository(
+                            mongo_client=AsyncIOMotorClient(settings.MONGO_URL)
+                        ),
+                    )
+                except Exception as e:
+                    print(f"Rabbit MQ로부터의 메세지를 처리하는데 실패하였습니다.: {e}")
