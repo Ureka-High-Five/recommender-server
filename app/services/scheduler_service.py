@@ -2,9 +2,12 @@ import math
 import time
 from typing import Awaitable, Callable, Dict, List
 from collections import defaultdict
+
+from app.models.word2vec_util import calc_user_vector
 from app.services import weight_strategy
 from app.enum.action_type import ActionType
 from app.models import db_w2v_mapper
+from app.services.redis import save_user_vector
 from app.util.weight_aging import exponential_decay_weight
 from app.repositories.action_log_repository import ActionLogRepository
 from app.repositories.user_weight_repository import UserWeightRepository
@@ -40,6 +43,8 @@ async def resize_weight(
         for genre_name, weight in genre_dict.items():
             await user_weight_repo.reset_weight(user_id, genre_name, weight)
 
+        user_vector = calc_user_vector(genre_dict)
+        await save_user_vector(user_id, user_vector)
     return
 
 def calc_resized_weight(timestamp : int, weight : float):

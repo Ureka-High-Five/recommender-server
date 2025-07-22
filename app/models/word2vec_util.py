@@ -22,6 +22,7 @@ def calc_user_vector(user_weights):
     return avg_vector
 
 
+
 def get_vector(keyword):
     return Word2VecModel.get_vector(keyword)
 
