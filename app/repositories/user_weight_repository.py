@@ -27,11 +27,11 @@ class UserWeightRepository:
             self.collection.bulk_write(operations)
 
     async def find_by_user_id(self, user_id: int) -> List[Dict]:
-        cursor = self.collection.find({"userId": user_id})
+        cursor = self.collection.find({"user_id": user_id})
         results = await cursor.to_list(length=None)
         return results
 
     async def reset_weight(self, user_id: int, genre: str, weight: float):
-        filter = {"userId": user_id, "metaInfoName": genre}
+        filter = {"user_id": user_id, "name": genre}
         update = {"$set": {"weight": weight}}
         await self.collection.update_one(filter, update, upsert=True)
