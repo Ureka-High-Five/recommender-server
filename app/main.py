@@ -11,7 +11,7 @@ from app.services.redis import init_redis, close_redis
 from app.services.scheduler_service import resize_weight
 from app.settings import settings
 from contextlib import asynccontextmanager
-from app.router import recommend, content, scheduler, user, embedding
+from app.router import recommend, content, scheduler_router, user, embedding
 from app.services.consumer import start_consumer
 import asyncio
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -46,16 +46,17 @@ async def load_w2v(app: FastAPI):
     print("✅ PostgreSQL 연결 완료")
 
     # resize_weight를 위한 스케줄링 함수 정의
-    def schedule_resize_weight():
-        asyncio.create_task(
-            resize_weight(
-                action_log_repo,
-                user_weight_repo,
-                partial(get_genres_by_content_id, pg_pool),
-            )
+    async def schedule_resize_weight():
+        await resize_weight(
+            action_log_repo,
+            user_weight_repo,
+            partial(get_genres_by_content_id, pg_pool),
         )
 
-    scheduler.add_job(schedule_resize_weight, "cron", hour=3, minute=0)
+    def schedule_resize_weight_wrapper():
+        asyncio.create_task(schedule_resize_weight())
+
+    scheduler.add_job(schedule_resize_weight_wrapper, "cron", hour=21, minute=42)
     scheduler.start()
     print("✅ APScheduler 설정 완료")
 
@@ -87,7 +88,7 @@ app.include_router(recommend.router)
 app.include_router(content.router)
 app.include_router(user.router)
 app.include_router(embedding.router)
-app.include_router(scheduler.router)
+app.include_router(scheduler_router.router)
 
 
 @app.get("/")
