@@ -20,4 +20,4 @@ async def trigger_resize_weight(request: Request):
     # 실제 비동기 가중치 재계산 실행
     await resize_weight(action_log_repo, user_weight_repo, get_genres_func)
 
-    return {"message": "✅ 가중치 재계산 완료"}
+    return {"message": "ok"}
