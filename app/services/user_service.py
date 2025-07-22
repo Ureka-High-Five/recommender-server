@@ -1,4 +1,3 @@
-from app.dto.user_dto import UserActionRequestDto
 from app.enum.action_type import ActionType
 from app.models import word2vec_util
 import numpy as np
