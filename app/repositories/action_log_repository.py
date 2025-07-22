@@ -4,7 +4,7 @@ from pymongo import ASCENDING
 
 class ActionLogRepository:
     def __init__(self, mongo_client: AsyncIOMotorClient):
-        self.db = mongo_client["highfive"]
+        self.db = mongo_client["leadme"]
         self.collection: AsyncIOMotorCollection = self.db["action_log"]
 
     async def find_by_user_id(self, user_id: int) -> List[Dict]:
