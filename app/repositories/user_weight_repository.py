@@ -2,6 +2,8 @@ from typing import List, Dict
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
 from pymongo import UpdateOne
 
+from app.models import db_w2v_mapper
+
 
 class UserWeightRepository:
     def __init__(self, mongo_client: AsyncIOMotorClient):
@@ -13,6 +15,7 @@ class UserWeightRepository:
     ):
         operations = []
         for meta_id, name in meta_info:
+            name = db_w2v_mapper.translate_genre(name)
             operations.append(
                 UpdateOne(
                     {"user_id": user_id, "meta_info_id": meta_id},

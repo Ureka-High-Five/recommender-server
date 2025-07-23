@@ -25,6 +25,4 @@ _genre_mapping = {
 
 
 def translate_genre(korean_genre: str) -> str:
-    return _genre_mapping.get(
-        korean_genre, "장르가 아닌 metadata는 건너뜁니다"
-    )  # 매핑 없을 경우
+    return _genre_mapping.get(korean_genre, korean_genre)
