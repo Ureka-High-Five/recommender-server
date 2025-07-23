@@ -16,8 +16,8 @@ from app.services.consumer import start_consumer
 import asyncio
 from apscheduler.schedulers.background import BackgroundScheduler
 
-scheduler = BackgroundScheduler()
 
+scheduler = BackgroundScheduler(timezone='Asia/Seoul')
 
 async def start_rabbitmq_consumer():
     print("🚀 RabbitMQ Consumer 시작")
@@ -53,10 +53,12 @@ async def load_w2v(app: FastAPI):
             partial(get_genres_by_content_id, pg_pool),
         )
 
-    def schedule_resize_weight_wrapper():
-        asyncio.create_task(schedule_resize_weight())
+    loop = asyncio.get_running_loop()
 
-    scheduler.add_job(schedule_resize_weight_wrapper, "cron", hour=21, minute=42)
+    def schedule_resize_weight_wrapper():
+        asyncio.run_coroutine_threadsafe(schedule_resize_weight(), loop)
+
+    scheduler.add_job(schedule_resize_weight_wrapper, "cron", hour=3, minute=0)
     scheduler.start()
     print("✅ APScheduler 설정 완료")
 
