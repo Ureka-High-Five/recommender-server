@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from pymongo import MongoClient
 from app.dto.user_dto import UserActionRequestDto
 from app.repositories.user_weight_repository import UserWeightRepository
@@ -10,8 +10,11 @@ from app.settings import settings
 router = APIRouter()
 
 class OnboardingRequestDto(BaseModel):
-    user_id: int
-    genre_map: dict[str, int]
+    user_id: int = Field(..., alias="userId")
+    genre_count: dict[str, int] = Field(..., alias="genreCount")
+
+    class Config:
+        allow_population_by_field_name = True
 
 class FastApiOnboardingResponseDto(BaseModel):
     userVector: str
