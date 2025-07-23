@@ -3,6 +3,7 @@ from app.models import word2vec_util
 import numpy as np
 from app.models import db_w2v_mapper
 from app.repositories.user_weight_repository import UserWeightRepository
+from app.services.redis import save_user_vector
 from app.services.weight_strategy import convert_to_weight
 
 
@@ -47,7 +48,7 @@ async def process_user_action(message: dict, repo: UserWeightRepository):
     user_vector = word2vec_util.calc_user_vector(combined_weights)
 
     print(user_vector)
-
+    await save_user_vector(user_id, user_vector)
 
 async def update_user_weight(message: dict, repo: UserWeightRepository):
     user_id = message.get("userId")
