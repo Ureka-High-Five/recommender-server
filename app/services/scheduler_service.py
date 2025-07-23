@@ -1,10 +1,13 @@
 import math
 import time
+import numpy as np
 from typing import Awaitable, Callable, Dict, List
 from collections import defaultdict
+from app.models.word2vec_util import calc_user_vector
 from app.services import weight_strategy
 from app.enum.action_type import ActionType
 from app.models import db_w2v_mapper
+from app.services.redis import save_user_vector
 from app.util.weight_aging import exponential_decay_weight
 from app.repositories.action_log_repository import ActionLogRepository
 from app.repositories.user_weight_repository import UserWeightRepository
@@ -38,8 +41,14 @@ async def resize_weight(
 
         for genre_name, weight in genre_dict.items():
             await user_weight_repo.reset_weight(user_id, genre_name, weight)
+        
+        vector = calc_user_vector(genre_dict)
+        vector_str = np.array2string(vector, separator=', ')
+        print(vector_str)
+        await save_user_vector(user_id, vector_str)
 
     print("✅ 가중치 재계산 완료")
+    
     return
 
 def calc_resized_weight(timestamp : int, weight : float):
