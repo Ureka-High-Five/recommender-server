@@ -26,9 +26,9 @@ def get_prefer_info_repository():
     return UserWeightRepository(mongo_client)
 
 @router.post("/user/preferences", response_model=FastApiOnboardingResponseDto)
-def onboarding(req: OnboardingRequestDto):
-    user_vector_str = user_service.init_user_vector(req.genre_map)
-    save_user_vector(req.user_id, user_vector_str)
+async def onboarding(req: OnboardingRequestDto):
+    user_vector_str = user_service.init_user_vector(req.genre_count)
+    await save_user_vector(req.user_id, user_vector_str)
     return FastApiOnboardingResponseDto(userVector=user_vector_str)
 
 @router.patch("/user/action")
