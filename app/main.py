@@ -1,5 +1,11 @@
+import asyncio
+from contextlib import asynccontextmanager
 from functools import partial
+from logging import getLogger
+from app.logging import setup_logging
+
 import asyncpg
+from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI
 from motor.motor_asyncio import AsyncIOMotorClient
 
@@ -7,17 +13,17 @@ from app.models.word2vec_model import Word2VecModel
 from app.repositories.action_log_repository import ActionLogRepository
 from app.repositories.postgresql_repository import get_genres_by_content_id
 from app.repositories.user_weight_repository import UserWeightRepository
-from app.services.redis import init_redis, close_redis
-from app.services.scheduler_service import resize_weight
-from app.settings import settings
-from contextlib import asynccontextmanager
 from app.router import recommend, content, scheduler_router, user, embedding
 from app.services.consumer import start_consumer
-import asyncio
-from apscheduler.schedulers.background import BackgroundScheduler
-
+from app.services.redis import init_redis, close_redis
+from app.router import test_log
+from app.services.scheduler_service import resize_weight
+from app.settings import settings
 
 scheduler = BackgroundScheduler(timezone='Asia/Seoul')
+setup_logging()
+logger = getLogger(__name__)
+
 
 async def start_rabbitmq_consumer():
     print("🚀 RabbitMQ Consumer 시작")
@@ -91,6 +97,7 @@ app.include_router(content.router)
 app.include_router(user.router)
 app.include_router(embedding.router)
 app.include_router(scheduler_router.router)
+app.include_router(test_log.router)
 
 
 @app.get("/")
