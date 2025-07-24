@@ -1,9 +1,11 @@
 import numpy as np
 from app.models import word2vec_util
+from app.models.db_w2v_mapper import translate_genre
 
 def calc_by_genre(genres):
   vecs = []
   for name in genres:
+    name = translate_genre(name)
     vec = word2vec_util.get_vector(name)
     if vec is None:
       continue
