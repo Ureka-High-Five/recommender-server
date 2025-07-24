@@ -1,5 +1,7 @@
 import json
+
 from app.repositories.user_weight_repository import UserWeightRepository
+from app.repositories.action_log_repository import ActionLogRepository
 from app.services.user_service import process_user_action, update_user_weight
 from app.settings.local import settings
 import aio_pika
@@ -25,19 +27,28 @@ async def start_consumer():
             async with message.process():
                 body = message.body.decode()
                 print(f"📥 Received: {body}")
+
+                data = json.loads(body)
+                mongo_client = AsyncIOMotorClient(settings.MONGO_URL)
+                user_repo = UserWeightRepository(mongo_client)
+                action_log_repo = ActionLogRepository(mongo_client)
+
                 try:
-                    data = json.loads(body)
                     await process_user_action(
                         data,
-                        UserWeightRepository(
-                            mongo_client=AsyncIOMotorClient(settings.MONGO_URL)
-                        ),
+                        user_repo,
+                        action_log_repo
                     ),
                     await update_user_weight(
                         data,
-                        repo=UserWeightRepository(
-                            mongo_client=AsyncIOMotorClient(settings.MONGO_URL)
-                        ),
+                        user_repo,
                     )
                 except Exception as e:
-                    print(f"Rabbit MQ로부터의 메세지를 처리하는데 실패하였습니다.: {e}")
+                    await action_log_repo.mark_status(
+                        collection_names = ["action_log", "managed_action_log"],
+                        doc_id = data["id"],
+                        status = "FAIL"
+                    )
+
+
+

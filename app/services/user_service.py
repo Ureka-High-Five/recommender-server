@@ -1,8 +1,11 @@
+from motor.motor_asyncio import AsyncIOMotorClient
+
 from app.enum.action_type import ActionType
 from app.models import word2vec_util
 import numpy as np
 from app.models import db_w2v_mapper
 from app.repositories.user_weight_repository import UserWeightRepository
+from app.repositories.action_log_repository import ActionLogRepository
 from app.services.redis import save_user_vector
 from app.services.weight_strategy import convert_to_weight
 
@@ -26,7 +29,7 @@ def init_user_vector(genre_map):
     return str(user_vector.tolist())
 
 
-async def process_user_action(message: dict, repo: UserWeightRepository):
+async def process_user_action(message: dict, userRepo: UserWeightRepository, actionLogRepo:ActionLogRepository):
     user_id = message.get("userId")
     meta_info_names = message.get("metaInfoNames", [])
     action_type = ActionType[message.get("actionType")]
@@ -34,11 +37,9 @@ async def process_user_action(message: dict, repo: UserWeightRepository):
 
     weight_from_message = convert_to_weight(action_type, value)
 
-    weights = await repo.find_by_user_id(user_id)
+    weights = await userRepo.find_by_user_id(user_id)
 
     db_weight_map = {doc.get("name"): doc.get("weight", 0.0) for doc in weights}
-
-    # 기존 가중치와 메시지에서 받은 가중치를 합산
     combined_weights = {}
 
     for name in meta_info_names:
@@ -46,8 +47,11 @@ async def process_user_action(message: dict, repo: UserWeightRepository):
         combined_weights[name] = existing_weight + weight_from_message
 
     user_vector = word2vec_util.calc_user_vector(combined_weights)
-    print(user_vector)
     await save_user_vector(user_id, user_vector)
+    await actionLogRepo.mark_status(collection_names=["action_log", "managed_action_log"],
+                                                        doc_id=message["id"], status="SUCCESS",
+                                                        delete_from_secondary=True)
+
 
 async def update_user_weight(message: dict, repo: UserWeightRepository):
     user_id = message.get("userId")
@@ -61,6 +65,7 @@ async def update_user_weight(message: dict, repo: UserWeightRepository):
     if not user_id or not meta_info_ids:
         print("Invalid message:", message)
         return
+    raise RuntimeError("🚨 테스트: update_user_weight에서 일부러 예외 발생")
 
     meta_info = list(zip(meta_info_ids, meta_info_names))
     repo.update_user_weights(user_id, meta_info, weight)
