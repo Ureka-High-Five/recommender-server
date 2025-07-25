@@ -1,5 +1,3 @@
-from motor.motor_asyncio import AsyncIOMotorClient
-
 from app.enum.action_type import ActionType
 from app.models import word2vec_util
 import numpy as np

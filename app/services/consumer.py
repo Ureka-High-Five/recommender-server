@@ -43,7 +43,7 @@ async def start_consumer():
                         data,
                         user_repo,
                     )
-                except Exception as e:
+                except Exception:
                     await action_log_repo.mark_status(
                         collection_names = ["action_log", "managed_action_log"],
                         doc_id = data["id"],
