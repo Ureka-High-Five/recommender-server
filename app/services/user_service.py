@@ -46,8 +46,9 @@ async def process_user_action(message: dict, repo: UserWeightRepository):
         combined_weights[name] = existing_weight + weight_from_message
 
     user_vector = word2vec_util.calc_user_vector(combined_weights)
-    print(user_vector)
-    await save_user_vector(user_id, user_vector)
+    user_vector_str = np.array2string(user_vector, separator=', ')
+    await save_user_vector(user_id, user_vector_str)
+
 
 async def update_user_weight(message: dict, repo: UserWeightRepository):
     user_id = message.get("userId")
