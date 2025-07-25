@@ -63,7 +63,6 @@ async def update_user_weight(message: dict, repo: UserWeightRepository):
     if not user_id or not meta_info_ids:
         print("Invalid message:", message)
         return
-    raise RuntimeError("🚨 테스트: update_user_weight에서 일부러 예외 발생")
 
     meta_info = list(zip(meta_info_ids, meta_info_names))
     repo.update_user_weights(user_id, meta_info, weight)
