@@ -2,7 +2,7 @@ import asyncio
 from contextlib import asynccontextmanager
 from functools import partial
 from logging import getLogger
-from app.logging import setup_logging
+from app.logger import setup_logging
 
 import asyncpg
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -90,6 +90,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="recommender server",
     lifespan=lifespan,
+    debug=True
 )
 
 app.include_router(recommend.router)
