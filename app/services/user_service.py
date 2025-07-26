@@ -68,3 +68,16 @@ async def update_user_weight(message: dict, repo: UserWeightRepository):
     meta_info = list(zip(meta_info_ids, meta_info_names))
     repo.update_user_weights(user_id, meta_info, weight)
     print(f" 유저의 가중치 업데이트 성공 : {user_id}")
+
+async def rollback_user_weight(message: dict, repo: UserWeightRepository):
+    user_id = message.get("userId")
+    meta_info_ids = message.get("metaInfoIds", [])
+    meta_info_names = message.get("metaInfoNames", [])
+    action_type = ActionType[message.get("actionType")]
+    value = message.get("value", 0.0)
+
+    rollback_weight = -1 * convert_to_weight(action_type, value)
+
+    meta_info = list(zip(meta_info_ids, meta_info_names))
+    await repo.update_user_weights(user_id, meta_info, rollback_weight)
+    print(f" 유저 가중치 롤백 완료: {user_id}")

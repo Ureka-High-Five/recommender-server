@@ -2,7 +2,7 @@ import json
 
 from app.repositories.user_weight_repository import UserWeightRepository
 from app.repositories.action_log_repository import ActionLogRepository
-from app.services.user_service import process_user_action, update_user_weight
+from app.services.user_service import process_user_action, update_user_weight, rollback_user_weight
 from app.settings.local import settings
 import aio_pika
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -34,11 +34,6 @@ async def start_consumer():
                 action_log_repo = ActionLogRepository(mongo_client)
 
                 try:
-                    await process_user_action(
-                        data,
-                        user_repo,
-                        action_log_repo
-                    ),
                     await update_user_weight(
                         data,
                         user_repo,
@@ -50,5 +45,16 @@ async def start_consumer():
                         status = "FAIL"
                     )
 
-
-
+                try:
+                    await process_user_action(
+                        data,
+                        user_repo,
+                        action_log_repo
+                    )
+                except Exception:
+                    await rollback_user_weight(data, user_repo)
+                    await action_log_repo.mark_status(
+                        collection_names = ["action_log", "managed_action_log"],
+                        doc_id = data["id"],
+                        status = "FAIL"
+                    )
