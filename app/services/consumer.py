@@ -44,6 +44,7 @@ async def start_consumer():
                         doc_id = data["id"],
                         status = "FAIL"
                     )
+                    continue
 
                 try:
                     await process_user_action(
