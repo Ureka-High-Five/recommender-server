@@ -66,5 +66,5 @@ async def update_user_weight(message: dict, repo: UserWeightRepository):
         return
 
     meta_info = list(zip(meta_info_ids, meta_info_names))
-    repo.update_user_weights(user_id, meta_info, weight)
+    await repo.update_user_weights(user_id, meta_info, weight)
     print(f" 유저의 가중치 업데이트 성공 : {user_id}")
