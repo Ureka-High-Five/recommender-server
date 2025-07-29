@@ -80,7 +80,7 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    await app.state.pg_pool.close().close()
+    await app.state.pg_pool.close()
     print("🛑 앱 종료 중...")
     rabbitmq_task.cancel()
     await close_redis()

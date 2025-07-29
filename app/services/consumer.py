@@ -46,7 +46,6 @@ async def start_consumer():
                         doc_id = data["id"],
                         status = "FAIL"
                     )
-                    await message.nack(requeue=False)
                     continue
 
                 try:
@@ -62,4 +61,3 @@ async def start_consumer():
                         doc_id = data["id"],
                         status = "FAIL"
                     )
-                    await message.nack(requeue=False)
