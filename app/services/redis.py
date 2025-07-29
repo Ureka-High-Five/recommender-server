@@ -16,6 +16,9 @@ async def init_redis():
         host=settings.DEV_REDIS_HOST,
         port=settings.DEV_REDIS_PORT,
         decode_responses=True,
+        socket_timeout=5,
+        socket_connect_timeout=5,
+        max_connections=50,
     )
     print(f"✅ Redis 연결 성공: {redis}")
 
@@ -27,4 +30,9 @@ async def close_redis():
 
 
 async def save_user_vector(user_id: int, value: str):
-    await get_redis().set(str(user_id), value)
+    try:
+        print(f"📝 Redis 저장 시작: user_id={user_id}")
+        await get_redis().set(str(user_id), value)
+        print(f"✅ Redis 저장 완료: user_id={user_id}")
+    except Exception as e:
+        print(f"❌ Redis 저장 실패: {e}")
