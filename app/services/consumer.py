@@ -10,7 +10,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 
 QUEUE_NAME = "recommendation.weight.update"
-
+MONGO_URI = f"mongodb://{settings.MONGO_DB_HOST}:{settings.MONGO_DB_PORT}/{settings.MONGO_DB_NAME}"
 
 async def start_consumer():
     amqp_url = (
@@ -21,7 +21,7 @@ async def start_consumer():
     channel = await connection.channel()
     queue = await channel.declare_queue(QUEUE_NAME, durable=True)
 
-    mongo_client = AsyncIOMotorClient(settings.MONGO_URL)
+    mongo_client = AsyncIOMotorClient(MONGO_URI)
     user_repo = UserWeightRepository(mongo_client)
     action_log_repo = ActionLogRepository(mongo_client)
     print(f"📡 Waiting for messages on queue: {QUEUE_NAME}")

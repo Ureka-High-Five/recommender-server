@@ -12,7 +12,9 @@ class LocalSettings(BaseSettings):
     RABBITMQ_PORT: int
     RABBITMQ_DEFAULT_USER: str
     RABBITMQ_DEFAULT_PASS: str
-    MONGO_URL: str
+    MONGO_DB_NAME: str
+    MONGO_DB_HOST: str
+    MONGO_DB_PORT: int
     DEV_REDIS_HOST: str
     DEV_REDIS_PORT: int
 
