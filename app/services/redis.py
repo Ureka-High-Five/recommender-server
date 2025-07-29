@@ -19,6 +19,7 @@ async def init_redis():
         socket_timeout=5,
         socket_connect_timeout=5,
         max_connections=50,
+        ssl=True,
     )
     print(f"✅ Redis 연결 성공: {redis}")
 
