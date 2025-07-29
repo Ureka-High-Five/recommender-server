@@ -27,7 +27,10 @@ def init_user_vector(genre_map):
     return str(user_vector.tolist())
 
 
-async def process_user_action(message: dict, userRepo: UserWeightRepository, actionLogRepo:ActionLogRepository):
+async def process_user_action(
+    message: dict, userRepo: UserWeightRepository, actionLogRepo: ActionLogRepository
+):
+    print("processing user action 호출 ")
     user_id = message.get("userId")
     meta_info_names = message.get("metaInfoNames", [])
     action_type = ActionType[message.get("actionType")]
@@ -36,6 +39,7 @@ async def process_user_action(message: dict, userRepo: UserWeightRepository, act
     weight_from_message = convert_to_weight(action_type, value)
 
     weights = await userRepo.find_by_user_id(user_id)
+    print("userRepo.find_by_user_id 호출 성공 ")
 
     db_weight_map = {doc.get("name"): doc.get("weight", 0.0) for doc in weights}
     combined_weights = {}
@@ -45,11 +49,17 @@ async def process_user_action(message: dict, userRepo: UserWeightRepository, act
         combined_weights[name] = existing_weight + weight_from_message
 
     user_vector = word2vec_util.calc_user_vector(combined_weights)
-    user_vector_str = np.array2string(user_vector, separator=', ')
+    print("user_vector 계산 성공")
+    user_vector_str = np.array2string(user_vector, separator=", ")
+    print("user_vector_str 변환 성공")
     await save_user_vector(user_id, user_vector_str)
-    await actionLogRepo.mark_status(collection_names=["action_log", "managed_action_log"],
-                                                       doc_id=message["id"], status="SUCCESS",
-                                                       delete_from_secondary=True)
+    print("Redis에 유저 벡터 저장 성공")
+    await actionLogRepo.mark_status(
+        collection_names=["action_log", "managed_action_log"],
+        doc_id=message["id"],
+        status="SUCCESS",
+        delete_from_secondary=True,
+    )
 
 
 async def update_user_weight(message: dict, repo: UserWeightRepository):
