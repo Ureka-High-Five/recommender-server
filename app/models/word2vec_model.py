@@ -1,4 +1,4 @@
-from gensim.models import KeyedVectors, Word2Vec
+from gensim.models import Word2Vec
 
 
 class Word2VecModel:
