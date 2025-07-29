@@ -27,7 +27,6 @@ jobs:
           echo "DB_PASSWORD=testpass" >> .env.local
           echo "DB_NAME=testdb" >> .env.local
           echo "W2V_MODEL_PATH=./app/assets/word2vec.model" >> .env.local
-          echo "MONGO_URL=mongodb://localhost:27017" >> .env.local
           echo "RABBITMQ_URL=localhost" >> .env.local
           echo "RABBITMQ_PORT=5672" >> .env.local
           echo "DEV_REDIS_HOST=localhost" >> .env.local
