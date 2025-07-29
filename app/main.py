@@ -35,7 +35,7 @@ async def load_w2v(app: FastAPI):
     print("✅ Word2Vec 모델 로드 완료")
 
     # MongoDB 연결
-    mongo_client = AsyncIOMotorClient(settings.MONGO_URI)
+    mongo_client = AsyncIOMotorClient(MONGO_URI)
     app.state.mongo_client = mongo_client
     action_log_repo = ActionLogRepository(mongo_client)
     user_weight_repo = UserWeightRepository(mongo_client)
