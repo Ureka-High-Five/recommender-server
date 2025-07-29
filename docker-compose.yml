@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   api:
+    network_mode: host
     image: ghkdwldus0807/lead-me-recommend:latest
     container_name: recommender_server
     restart: unless-stopped

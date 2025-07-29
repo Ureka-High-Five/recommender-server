@@ -32,8 +32,7 @@ async def close_redis():
 async def save_user_vector(user_id: int, value: str):
     try:
         print(f"📝 Redis 저장 시작: user_id={user_id}")
-        # await get_redis().set(str(user_id), value)
-        await get_redis().set(str(user_id), "hello")
+        await get_redis().set(str(user_id), value)
         print(f"✅ Redis 저장 완료: user_id={user_id}")
     except Exception as e:
         print(f"❌ Redis 저장 실패: {e}")
