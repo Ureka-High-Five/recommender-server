@@ -23,7 +23,7 @@ from app.settings import settings
 scheduler = BackgroundScheduler(timezone='Asia/Seoul')
 setup_logging()
 logger = getLogger(__name__)
-
+MONGO_URI = f"mongodb://{settings.MONGO_DB_HOST}:{settings.MONGO_DB_PORT}/{settings.MONGO_DB_NAME}"
 
 async def start_rabbitmq_consumer():
     print("🚀 RabbitMQ Consumer 시작")
@@ -35,7 +35,7 @@ async def load_w2v(app: FastAPI):
     print("✅ Word2Vec 모델 로드 완료")
 
     # MongoDB 연결
-    mongo_client = AsyncIOMotorClient(settings.MONGO_URL)
+    mongo_client = AsyncIOMotorClient(settings.MONGO_URI)
     app.state.mongo_client = mongo_client
     action_log_repo = ActionLogRepository(mongo_client)
     user_weight_repo = UserWeightRepository(mongo_client)
