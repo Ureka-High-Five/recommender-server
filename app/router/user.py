@@ -7,11 +7,13 @@ from app.services import user_service
 from app.settings import settings
 
 router = APIRouter()
+MONGO_URI = f"mongodb://{settings.MONGO_DB_HOST}:{settings.MONGO_DB_PORT}/{settings.MONGO_DB_NAME}"
+
 
 class FastApiOnboardingResponseDto(BaseModel):
     userVector: str
 
-mongo_client = MongoClient(settings.MONGO_URL)
+mongo_client = MongoClient(MONGO_URI)
 
 # Dependency
 def get_prefer_info_repository():
