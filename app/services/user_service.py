@@ -30,7 +30,6 @@ def init_user_vector(genre_map):
 async def process_user_action(
     message: dict, userRepo: UserWeightRepository, actionLogRepo: ActionLogRepository
 ):
-    print("processing user action 호출 ")
     user_id = message.get("userId")
     meta_info_names = message.get("metaInfoNames", [])
     action_type = ActionType[message.get("actionType")]
@@ -39,7 +38,6 @@ async def process_user_action(
     weight_from_message = convert_to_weight(action_type, value)
 
     weights = await userRepo.find_by_user_id(user_id)
-    print("userRepo.find_by_user_id 호출 성공 ")
 
     db_weight_map = {doc.get("name"): doc.get("weight", 0.0) for doc in weights}
     combined_weights = {}
@@ -49,11 +47,8 @@ async def process_user_action(
         combined_weights[name] = existing_weight + weight_from_message
 
     user_vector = word2vec_util.calc_user_vector(combined_weights)
-    print("user_vector 계산 성공")
     user_vector_str = np.array2string(user_vector, separator=", ")
-    print("user_vector_str 변환 성공")
     await save_user_vector(user_id, user_vector_str)
-    print("Redis에 유저 벡터 저장 성공")
     await actionLogRepo.mark_status(
         collection_names=["action_log", "managed_action_log"],
         doc_id=message["id"],
@@ -66,6 +61,8 @@ async def update_user_weight(message: dict, repo: UserWeightRepository):
     user_id = message.get("userId")
     meta_info_ids = message.get("metaInfoIds", [])
     meta_info_names = message.get("metaInfoNames", [])
+    meta_info_types = message.get("metaInfoTypes", [])
+
     action_type = ActionType[message.get("actionType")]
     value = message.get("value", 0.0)
 
@@ -75,6 +72,6 @@ async def update_user_weight(message: dict, repo: UserWeightRepository):
         print("Invalid message:", message)
         return
 
-    meta_info = list(zip(meta_info_ids, meta_info_names))
+    meta_info = list(zip(meta_info_ids, meta_info_names, meta_info_types))
     await repo.update_user_weights(user_id, meta_info, weight)
     print(f" 유저의 가중치 업데이트 성공 : {user_id}")
