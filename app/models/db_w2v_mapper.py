@@ -29,9 +29,8 @@ def translate_genre(genre: str) -> str | None:
 
     if genre in _genre_mapping:
         return _genre_mapping[genre]
-    
+
     if genre in _genre_mapping.values():
         return genre
 
-    return None
-
+    return genre
