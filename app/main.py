@@ -1,6 +1,5 @@
 import asyncio
 from contextlib import asynccontextmanager
-from functools import partial
 from logging import getLogger
 from app.logger import setup_logging
 
@@ -10,14 +9,10 @@ from fastapi import FastAPI
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from app.models.word2vec_model import Word2VecModel
-from app.repositories.action_log_repository import ActionLogRepository
-from app.repositories.postgresql_repository import get_genres_by_content_id
-from app.repositories.user_weight_repository import UserWeightRepository
-from app.router import recommend, content, scheduler_router, user, embedding
+from app.router import recommend, content, user, embedding
 from app.services.consumer import start_consumer
 from app.services.redis import init_redis, close_redis
 from app.router import test_log
-from app.services.scheduler_service import resize_weight
 from app.settings import settings
 
 scheduler = BackgroundScheduler(timezone='Asia/Seoul')
@@ -37,8 +32,6 @@ async def load_w2v(app: FastAPI):
     # MongoDB 연결
     mongo_client = AsyncIOMotorClient(MONGO_URI)
     app.state.mongo_client = mongo_client
-    action_log_repo = ActionLogRepository(mongo_client)
-    user_weight_repo = UserWeightRepository(mongo_client)
 
     # PostgreSQL 연결
     pg_pool = await asyncpg.create_pool(
@@ -50,23 +43,6 @@ async def load_w2v(app: FastAPI):
     )
     app.state.pg_pool = pg_pool
     print("✅ PostgreSQL 연결 완료")
-
-    # resize_weight를 위한 스케줄링 함수 정의
-    async def schedule_resize_weight():
-        await resize_weight(
-            action_log_repo,
-            user_weight_repo,
-            partial(get_genres_by_content_id, pg_pool),
-        )
-
-    loop = asyncio.get_running_loop()
-
-    def schedule_resize_weight_wrapper():
-        asyncio.run_coroutine_threadsafe(schedule_resize_weight(), loop)
-
-    scheduler.add_job(schedule_resize_weight_wrapper, "cron", hour=3, minute=0)
-    scheduler.start()
-    print("✅ APScheduler 설정 완료")
 
 
 @asynccontextmanager
@@ -97,7 +73,6 @@ app.include_router(recommend.router)
 app.include_router(content.router)
 app.include_router(user.router)
 app.include_router(embedding.router)
-app.include_router(scheduler_router.router)
 app.include_router(test_log.router)
 
 
