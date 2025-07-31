@@ -2,7 +2,7 @@ from app.enum.action_type import ActionType
 
 def convert_to_weight(type : ActionType, value : float) -> float :
   if type == ActionType.CLICK:
-    return 0.2
+    return 0.05
   if type == ActionType.LIKE:
     return 0.1
   if type == ActionType.WATCH:
