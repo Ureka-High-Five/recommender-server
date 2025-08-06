@@ -21,6 +21,7 @@ _genre_mapping = {
     "Kids": "Children",
     "War & Politics": "War",
     "Talk": "Talkshow",
+    "토크쇼": "Talkshow",
 }
 
 
