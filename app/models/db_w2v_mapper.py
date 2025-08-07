@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 _genre_mapping = {
     "공포": "Horror",
     "액션": "Action",
@@ -16,11 +18,6 @@ _genre_mapping = {
     "역사": "History",
     "음악": "Music",
     "전쟁": "War",
-    "Action & Adventure": "Adventure",
-    "Sci-Fi & Fantasy": "Fantasy",
-    "Kids": "Children",
-    "War & Politics": "War",
-    "Talk": "Talkshow",
     "토크쇼": "Talkshow",
     "리얼리티": "Reality"
 }
