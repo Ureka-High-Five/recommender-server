@@ -22,6 +22,7 @@ _genre_mapping = {
     "War & Politics": "War",
     "Talk": "Talkshow",
     "토크쇼": "Talkshow",
+    "리얼리티": "Reality"
 }
 
 
